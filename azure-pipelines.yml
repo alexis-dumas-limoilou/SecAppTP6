@@ -10,6 +10,17 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- checkout: self
+  fetchDepth: 0
+
+- task: SonarCloudPrepare@3
+  inputs:
+    SonarQube: 'sc-sonarcloud'
+    organization: '2194189infonuagique'
+    scannerMode: 'dotnet'
+    projectKey: '2194189Infonuagique_SecAppTP5'
+    projectName: 'SecAppTP5'
+
 - task: DotNetCoreCLI@2
   inputs:
          command: 'restore'
@@ -23,3 +34,7 @@ steps:
          projects: '**/*.csproj'
          arguments: '--configuration $(buildConfiguration)'
   displayName: 'Génération de la solution'
+
+- task: SonarCloudAnalyze@3
+  inputs:
+    jdkversion: 'JAVA_HOME_17_X64'
